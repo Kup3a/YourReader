@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <title>TODO supply a title</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <link href="../bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
+        <script type="text/javascript" src="https://www.dropbox.com/static/api/2/dropins.js" id="dropboxjs" data-app-key="52f6yz7hb7kyspm"></script>
+    </h:head>
+    <h:body>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h2>#{forPrivateContent.aboutUserBooks}</h2>
+                    <h:dataTable value="#{forPrivateContent.booksByUserLogin}" class="table table-striped" var="s" >                        
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="bookId"/>
+                            </f:facet>
+                            <h:outputText value="#{s.bookId}" />
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="userId"/>
+                            </f:facet>
+                            <h:outputText value="#{s.userId}" />
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="title"/>
+                            </f:facet>
+                            <h:outputText value="#{s.title}" />
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="reference"/>
+                            </f:facet>
+                            <a href="#{s.reference.concat('#page=').concat(s.lastPage)}" onclick="setCookie('',#{s.bookId},'')">Вперёд читать!</a> <!-- forRefOnClick(#{s.bookId}) -->
+                            <!--
+                            не получается сохранить ид книги сначала в js файл, а потом оттуда получать в viewer.js и отправлять в вебсервис
+                            наверное, потому что для каждой страницы js файл как бы обновляется
+                            -->
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="last page"/>
+                            </f:facet>
+                            <h:outputText value="#{s.lastPage}"/>
+                        </h:column>
+                    </h:dataTable>
+                </div>
+                <div class="col-md-6">
+                    <h2>Вытягивайте книги прямо из Вашего Dropbox!</h2>
+                    <h:form id="myForm">
+                        <div>
+                            <div id="div1">
+                                <h2>Choose the file</h2>
+                                <p id="container">        
+                                    <!-- тут у нас живет кнопка -->
+                                </p>                                
+                            </div>
+                        </div>
+                    </h:form>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <h1>JS reader, local link</h1>
+                    <a href="../web/viewer.html?file=compressed.tracemonkey-pldi-09.pdf#pagemode=thumbs&amp;page=7">Open Getting.pdf with PDF.js</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+        <script src="../js/privateJS.js"></script>
+        <script src="../web/viewer.js"/>
+    </h:body>
+</html>

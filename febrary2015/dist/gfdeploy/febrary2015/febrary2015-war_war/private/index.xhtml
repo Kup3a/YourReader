@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<!--<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>TODO supply a title</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    </head>
+    <body>
+        <h1>Авторизация</h1>
+        <form action="j_security_check" method="POST">
+            <div id="loginBox">
+                <p><strong>Ваш логин:</strong>
+                    <input placeholder="Введите логин" type="text" size="20" name="j_username"/></p>
+                <p><strong>Пароль:</strong>
+                    <input placeholder="Введите пароль" type="password" size="20" name="j_password"/></p>
+                <p><input type="submit" value="Авторизоваться"/></p>
+            </div>
+        </form>
+    </body>
+</html>-->
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <title>Your Reader</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <link href="../bootstrap/css/bootstrap.min.css" rel="stylesheet"/>        
+    </h:head>
+    <h:body>        
+        
+        <!-- страница открывалась не как jsf-ная, поэтому и h: элемент никак не отрисовывался. 
+            в web.xml сказано, что все jsf-страницы открываются так /faces/имя_страницы-->
+        <div class="container">
+            <div class="#{registration.helpMessageClass}">
+                <div class="alert alert-success col-md-12" role="alert" >
+                    #{registration.helpMessageText}
+                </div>
+            </div>
+            <div class="row">
+                <div class ="col-md-6">
+                    <h1>Авторизация</h1>
+                    <!--                    <form class="form-horizontal" action="j_security_check" method="POST">-->
+                    <h:form id="formLogin" class="form-horizontal" prependId="false"
+                            onsubmit="document.getElementById('formLogin').action = 'j_security_check';">
+                        <div id="loginBox" class="form-group">
+                            <label class="col-sm-2 control-label">Login</label>
+                            <div class="col-sm-10">
+                                <h:inputText class="form-control"  id="j_username" value="#{registration.login}"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputPassword3" class="col-sm-2 control-label">Password</label>
+                            <div class="col-sm-10">
+                                <h:inputSecret  class="form-control" id="j_password" value="#{registration.password}"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <h:commandButton class="btn btn-default" type="submit" value="Sign in" action="#{registration.signIn()}"></h:commandButton>
+                                <!-- <button type="submit" class="btn btn-default">Sign in</button>  -->
+                            </div>
+                        </div>
+                    </h:form>
+                </div>
+                <div class="col-md-6">
+                    <h1>Регистрация:</h1>
+                    <h:form class="form-horizontal">
+                        <div class="form-group">
+                            <label for="inputEmail3" class="col-sm-2 control-label">Login</label>
+                            <div class="col-sm-10">
+                                <h:inputText class="form-control" id="inputEmail3" value="#{registration.login}"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputPassword3" class="col-sm-2 control-label">Password</label>
+                            <div class="col-sm-10">
+                                <h:inputSecret class="form-control" id="inputPassword3" value="#{registration.password}"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox"/> Remember me
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <h:commandButton type="submit" class="btn btn-default" action="#{registration.signIn()}" value="Register in"></h:commandButton>
+                            </div>
+                        </div>
+                    </h:form>
+                </div>
+            </div>
+        </div>
+
+
+
+        <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+        <!-- Include all compiled plugins (below), or include individual files as needed 
+        <script src="js/bootstrap.min.js"></script>-->
+    </h:body>
+</html>

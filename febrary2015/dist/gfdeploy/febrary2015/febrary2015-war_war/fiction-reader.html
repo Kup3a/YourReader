@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html manifest="fiction-reader.appcache">
+ <head>
+  <meta charset="utf-8">
+  <title>FictionReader JS</title>
+  <meta name="viewport" content="width=device-width">
+  <!--<link rel="shortcut icon" href="bookonscreen.png">-->
+  <!--<link rel="apple-touch-icon-precomposed" href="fiction-reader.png">-->
+  <script type="text/javascript" src="fiction-reader.js"></script>
+  <script type="text/javascript">
+function setup_meta(book) {
+	document.getElementById("book-title").innerHTML =
+		book.getBookTitle();
+		
+	document.getElementById("book-authors").innerHTML =
+		render_authors(book.getBookAuthors());
+
+	document.getElementById("book-annotation").innerHTML = "";
+	document.getElementById("book-annotation")
+		.appendChild(book.getBookAnnotation());
+		
+	var doc_authors = book.getDocumentAuthors();
+	if (doc_authors.length > 0)
+		document.getElementById("prepared-by").innerHTML =
+			"Prepared by<br>\n"
+			+ render_authors(book.getDocumentAuthors());
+	var program = book.getProgramUsed();
+	if (program)
+		document.getElementById("prepared-with").innerHTML =
+			"Prepared with<br>\n" + program;
+	var date = book.getDocumentDate();
+	if (date)
+		document.getElementById("prepared-on").innerHTML =
+			"Prepared on<br>\n" + date;
+}
+
+function render_authors(authors) {
+	var authors_field = "";
+	for (var i = 0; i < authors.length; i++) {
+		if (authors[i].nickname.length > 0) {
+			authors_field += authors[i].nickname + "<br>\n";
+		} else {
+			authors_field +=
+				authors[i].first_name
+				+ " " + authors[i].middle_name
+				+ " " + authors[i].last_name + "<br>\n";
+		}
+	}
+	return authors_field;
+}
+
+function setup_toc(toc, book) {
+	document.getElementById("toc").innerHTML = "";
+	for (var i = 0; i < toc.length; i++) {
+		var li = document.createElement("li");
+		document.getElementById("toc").appendChild(li);
+
+		var a = document.createElement("a");
+		a.href = "#content";
+		a.onclick = toc_handler(toc, i, book);
+		li.appendChild(a);
+
+		var title = FicR.getSectionTitle(toc[i]);
+		if (!title) title = "(unnamed)";
+		a.innerHTML = title;
+	}
+}
+
+function setup_notes(notes) {
+	var notes_content = document.getElementById("notes-content");
+	for (var i = 0; i < notes.length; i++) {
+		notes_content.appendChild(FicR.render_section(notes[i]));
+	}
+}
+
+function setup_nav_links(toc, current_section) {
+	var prev_link = document.getElementById("prev-link");
+	var next_link = document.getElementById("next-link");
+	if (current_section <= 0) {
+		prev_link.style.display = "none";
+	} else {
+		prev_link.style.display = "inline";
+	}
+	if (current_section >= (toc.length - 1)) {
+		next_link.style.display = "none";
+	} else {
+		next_link.style.display = "inline";
+	}
+}
+
+var current_section = 0;
+
+function toc_handler(toc, section_num, book) {
+	return function () {
+		/*history.pushState(
+			{section: current_section},
+			FicR.getSectionTitle(toc[current_section]));*/
+		load_section(toc[section_num], book);
+		setup_nav_links(toc, section_num);
+		current_section = section_num;
+		//return false; // Let the anchor work.
+	}
+}
+
+function load_section(section, book) {
+	var content = document.getElementById("content");
+	content.innerHTML = "";
+	content.appendChild(FicR.render_section(section, book));
+
+	var note_links = content.getElementsByTagName("a");
+	for (var i = 0; i < note_links.length; i++) {
+		if (note_links[i].className == "note") {
+			note_links[i].onclick = function () {
+				document.getElementById("notes-page")
+					.style.display = "block";
+				console.log("showing notes...");
+			}
+		}
+	}
+}
+
+window.addEventListener("load", function () {
+	var toc = [];
+	
+	var input = document.getElementById("local-file");
+	input.addEventListener("change", function () {
+		var file = this.files[0];
+		var reader = new FileReader();
+		reader.onload = function () {
+			var parser = new DOMParser();
+			var booksrc = parser.parseFromString(
+				reader.result, "application/xml");
+			var book = new FictionReader(booksrc);
+			toc = book.getTableOfContents();
+
+			setup_meta(book);
+			setup_toc(toc, book);
+			setup_notes(book.getNotes());
+
+			load_section(toc[0], book);
+			setup_nav_links(toc, current_section);
+			
+			document.getElementById("blurb")
+				.style.display = "none";
+			document.getElementById("reader")
+				.style.display = "block";
+		};
+		reader.readAsText(file);
+	}, false);
+	
+	var prev_link = document.getElementById("prev-link");
+	prev_link.addEventListener("click", function () {
+		if (current_section <= 0) {
+			alert("You're at the beginning of the document.");
+		} else {
+			/*history.pushState(
+				{section: current_section},
+				FicR.getSectionTitle(toc[current_section]));*/
+			current_section--;
+			load_section(toc[current_section]);
+			setup_nav_links(toc, current_section);
+		}
+	}, false);
+	
+	var next_link = document.getElementById("next-link");
+	next_link.addEventListener("click", function () {
+		if (current_section >= (toc.length - 1)) {
+			alert("You're at the end of the document.");
+		} else {
+			/*history.pushState(
+				{section: current_section},
+				FicR.getSectionTitle(toc[current_section]));*/
+			current_section++;
+			load_section(toc[current_section]);
+			setup_nav_links(toc, current_section);
+		}
+	}, false);
+	
+	/*window.addEventListener("popstate", function (event) {
+		if (event.state) {
+			current_section = event.state.section;
+			load_section(toc[current_section]);
+			setup_nav_links(toc, current_section);
+		}
+	}, false);*/
+	
+	var close_notes_link = document.getElementById("close-notes");
+	close_notes_link.addEventListener("click", function (event) {
+		document.getElementById("notes-page").style.display = "none";
+		event.preventDefault();
+	}, false);
+}, false);
+  </script>
+  <style type="text/css">
+body {
+	Margin: 0;
+	Padding: 0;
+	Color: black;
+	Background-color: #eeddcc;
+	Font-family: serif;
+}
+
+#file-browser, #notes-page {
+	Padding: 1ex;
+	Margin: 1ex;
+	Background-color: #f0f0f0;
+	Border: 1px solid black;
+	Box-shadow: 3px 3px 3px;
+}
+
+#title-page {
+	Text-align: center;
+	Font-weight: bold;
+	Width: 70ex;
+	Max-width: 80%;
+	Margin: 0 auto;
+}
+
+.annotation {
+	Text-align: left;
+	Margin: 1em 5ex;
+}
+
+.epigraph {
+	Text-align: left;
+	Margin: 1em 0;
+	Margin-left: 40%;
+	Font-style: italic;
+}
+
+#toc-page, #nav-links, #content, #blurb {
+	Width: 70ex;
+	Max-width: 80%;
+	Padding: 1em 5ex;
+	Margin: 1em auto;
+	Background-color: #f0f0f0;
+	Border: 1px solid black;
+	Box-shadow: 3px 3px 3px;
+}
+
+#notes-page {
+	Overflow: auto;
+	Position: fixed;
+	Bottom: 0;
+	Left: 0;
+	Right: 0;
+	Top: 60%;
+	Display: none;
+}
+
+#close-notes {
+	Position: absolute;
+	Top: 1ex;
+	Right: 1ex;
+}
+
+#nav-links { Text-align: center; }
+#prev-link { Float: left; }
+#next-link { Float: right; }
+
+h1, h2, h3 { Font-family: sans-serif; }
+#content { Text-align: justify; }
+#content table { Text-align: left; }
+
+#reader { Display: none; }
+  </style>
+ </head>
+	 
+ <body role="application">
+  <form id="file-browser">
+   <label>
+    Open a file from your computer:
+    <input type="file" id="local-file">
+   </label>
+   Only FictionBook (.FB2) files are supported.
+  </form>
+
+  <div id="reader">
+  
+  <div id="title-page" role="complementary">
+   <h1 id="book-title"></h1>
+   <p id="book-authors"></p>
+   <div id="book-annotation" class="annotation"></div>
+   <p id="prepared-by"></p>
+   <p id="prepared-with"></p>
+   <p id="prepared-on"></p>
+  </div>
+
+  <div id="toc-page" role="navigation">
+   <h2>Table of Contents</h2>
+   <ol id="toc"></ol>
+  </div>
+  
+  <div id="content" role="main" aria-live="polite"></div>
+
+  <div id="nav-links" role="navigation">
+   <a href="#content" id="prev-link">Previous</a>
+   <a href="#content" id="next-link">Next</a>
+   <a href="#toc-page" title="Table of Contents">ToC</a>
+  </div>
+  
+  <div id="notes-page" role="complementary">
+   <h2>Notes</h2>
+   <a id="close-notes" href="#">Close notes</a>
+   <div id="notes-content">
+	   
+   </div>
+  </div>
+  
+  </div>
+  
+  <div id="blurb" role="contentinfo">
+   <h2>What is this?</h2>
+   
+   <p>FictionReader JS is an incomplete reader for the FictionBook
+   format, also known as FB2. FictionBook is an open e-book format
+   created in Russia, where it's the most popular.</p>
+   
+   <p>You can find out more about the format at:</p>
+   
+   <ul>
+    <li><a href="http://fictionbook.org/index.php/English">the official FictionBook website</a>;</li>
+    <li><a href="https://en.wikipedia.org/wiki/FictionBook">Wikipedia</a>;</li>
+    <li><a href="http://wiki.mobileread.com/wiki/FB2">the MobileReads Wiki</a>.</li>
+   </ul>
+   
+   <p>Books in this format can be found at:</p>
+   
+   <ul>
+    <li><a href="http://manybooks.net/">ManyBooks.net</a> and</li>
+    <li><a href="http://fictionbook-lib.org/">fictionbook-lib.org</a>.</li>
+   </ul>
+   
+   <h2>Status</h2>
+   
+   <p>As of 2013-04-01, FictionReader JS can load FB2 files off your
+   computer and display the text in a navigable format. I couldn't get
+   images to work.</p>
+   
+   <p>FictionReader JS has been developed with Firefox 17 and tested
+   in Opera 12. Any compatibility reports would be appreciated.</p>
+   
+   <h2>License</h2>
+   
+   <p>FictionReader JS was written by
+   <a href="http://felix.plesoianu.ro/">Felix Pleșoianu</a>.</p>
+   
+<p>Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:</p>
+
+<p>The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.</p>
+
+<p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.</p>
+  </div>
+ </body>
+</html>
