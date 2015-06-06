@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core" 
+      xmlns:p="http://primefaces.org/ui" >
+    <h:head>
+        <title>YourReader</title>
+        <script type="text/javascript" src="https://www.dropbox.com/static/api/2/dropins.js" id="dropboxjs" data-app-key="52f6yz7hb7kyspm"></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <script src="js/jQuery.js"></script>
+    </h:head>
+    <h:body>
+        <div>
+            <a href="fiction-reader.html">Ссылка на fb-2 reader</a>
+            
+        </div>
+        
+        <div>
+            <h1>
+                Пробуем Box Viewer
+            </h1>
+            <h:button value="Go" outcome="newxhtml"/>
+            <hr />
+        </div>
+
+        <div>
+            <h1>Пробуем получить значения из базы данных</h1>
+            <h:dataTable value="#{forPDF.books}" var="s" border="2" cellspacing="5" cellpadding="5" frame="box" width="100%">
+                <f:facet name="header" >
+                    <h:column>
+                        <h:outputText value="book_id" />
+                    </h:column>
+                    <h:column>
+                        <h:outputText value="title" />
+                    </h:column>
+                </f:facet>
+                <h:column>
+                    <h:outputText value="#{s.bookId}" />
+                </h:column>
+                <h:column>
+                    <h:outputText value="#{s.title}" />
+                </h:column>
+                <h:column>
+                    <a href="#{s.reference}">Вперёд читать!</a>
+                </h:column>
+            </h:dataTable>
+        </div>
+
+        <h:form>
+            <h2>
+                А тут пробуем вставить строчку.
+            </h2>
+            <h:commandButton action="#{forPDF.newBook()}" value="добавь"/>
+        </h:form>
+
+
+
+        <h:form id="myForm">
+            <div>
+                <div id="div1">
+                    <h2>Choose the file</h2>
+                    <p id="container">        
+                        <!-- тут у нас живет кнопка -->
+                    </p>
+                    <div id="div2">
+                        <h3>Вами выбрана ссылка:</h3>
+                    </div>
+                    <h:commandButton id="addBook" value="Добавить выбранную книгу в базу" action="#{forPDF.addBook()}"/>
+                    <hr/>
+                    <input id="in1" name="inn1" value=""></input>
+                    <input id="in2" name="inn2" value=""></input>
+                </div>
+            </div>
+        </h:form>
+
+        <h3>PDF</h3>
+        <hr/>
+        <div id="reader">
+            <p:media id="mypdf" value="docs/Getting.pdf" player="pdf" height="200px" width="100%"/>            
+        </div>
+
+        <h1>JS reader, local link</h1>
+        <a href="web/viewer.html?file=compressed.tracemonkey-pldi-09.pdf#pagemode=thumbs&amp;page=3">Open Getting.pdf with PDF.js</a>
+        <hr/>
+        <h1>JS reader, URL link</h1>
+        <a id="refURL" href="web/viewer.html?file=https://dl.dropboxusercontent.com/1/view/inz2e2tn7vyq522/Getting%20Started.pdf">Open Getting.pdf with PDF.js</a>
+        <h:form>
+            <h:commandButton id="readerButton" action="#{forPDF.goToReader()}" value="ок"/>
+        </h:form>
+        <hr/>
+        <h1>MY EXAMPLE</h1>
+        <h:form>
+            <h:dataTable value="#{forPDF.ref}" var="r">
+                <h:column>
+                    <p:media value="#{r}" player="pdf" height="600px" width="600px"/>
+                    <!-- <h:outputText value="#{r}"/> -->
+                </h:column>
+            </h:dataTable>
+            <h:commandButton value="add" action="#{forPDF.add}"></h:commandButton>            
+        </h:form>
+
+
+        <h1>EXAMPLE FROM STACK</h1>
+        <h:form>
+            <h:dataTable value="#{bean.items}" var="item">
+                <h:column><h:inputText value="#{item.value}" /></h:column>
+            </h:dataTable>
+            <h:commandButton value="add" action="#{bean.add}" />
+            <h:commandButton value="submit" action="#{bean.submit}" />
+        </h:form>
+
+
+        <script src="js/dropchooser.js"></script>
+    </h:body>
+</html>

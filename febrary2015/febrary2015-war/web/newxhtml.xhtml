@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+    <h:head>
+        <title>TODO supply a title</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <link rel="stylesheet" href="boxviewer/crocodoc.viewer.min.css" />
+        <script type="text/javascript" src="js/jQuery.js"></script>
+        <script type="text/javascript" src="boxviewer/crocodoc.viewer.min.js"></script>
+        <div class="viewer" style="height: 400px"></div>
+        <script type="text/javascript">
+            var viewer = Crocodoc.createViewer('.viewer', {
+                url: 'https://view-api.box.com/1/sessions/3c6abc0dcf35422e8353cf9c27578d5c/assets/'
+            });
+            viewer.load();
+        </script>
+    </h:head>
+    <h:body>
+        <div>
+            <h1>Тестируем Box</h1>
+
+        </div>
+    </h:body>
+</html>

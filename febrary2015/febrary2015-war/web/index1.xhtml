@@ -1,0 +1,127 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <h:head>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+        <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>  
+        <h:outputStylesheet name="bootstrap/css/bootstrap-theme.min.css" />
+        <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
+        <title>OnlineReader</title>
+    </h:head>
+    <h:body>
+        <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="faces/profile.xhtml">Profile</a>
+                </div>
+                <div class="navbar-collapse collapse">
+                    <form class="navbar-form navbar-right" role="form">
+                        <div class="form-group">
+                            <input type="text" placeholder="Email" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <input type="password" placeholder="Password" class="form-control" />
+                        </div>
+                        <button type="submit" class="btn  btn-primary">Sign In</button>
+                        <button type="submit" class="btn btn-success" >Sign Up</button>
+                    </form>
+                </div><!--/.navbar-collapse -->
+            </div>
+        </div>
+
+
+        <!-- Main jumbotron for a primary marketing message or call to action -->
+        <div class="jumbotron">
+            <div class="container">
+                <div class='row'>
+                    <div class="col-md-12">
+                        <p>
+                            <h1>YourReader - путь к любимым книгам!</h1>                            
+                        </p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <p>
+                            Узнай, почему теперь у тебя есть одна читалка для всех устройств.
+                        </p>
+                        <p><a class="btn btn-info btn-lg" role="button">Хочу узнать!</a></p>
+                    </div>
+                    <div class="col-md-6">
+                        <p>
+                            Или попробуй её в действии!
+                        </p>
+                        <br></br>
+                        <br></br>
+                        <p>
+                            <a class="btn btn-success">Хочу попробовать!</a>
+                        </p>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <h3>
+                        А чтобы получить полноценный доступ к функционалу читалки, просто войди в систему!
+                    </h3>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-5">
+                    <h2>Регистрация</h2>
+                    <p>Стать участником сообщества</p>
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-addon" id="sizing-addon3">Логин</span>
+                        <input type="text" class="form-control" placeholder="Ваш логин для входа в систему" aria-describedby="sizing-addon3"></input>
+                    </div>
+                    <br></br>
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-addon" id="sizing-addon3">Пароль</span>
+                        <input type="password" class="form-control" placeholder="Ваш пароль" aria-describedby="sizing-addon3"></input>
+                    </div>    
+                    <br></br>
+                    <p><a class="btn btn-danger" href="#" role="button" align="right">Вперёд!</a></p>
+                </div>
+                <div class="col-md-2"></div>
+                <div class="col-md-4">
+                    <h2>Вход</h2>
+                    <p>Войти со своей учетной записью</p>
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-addon" id="sizing-addon3">Логин</span>
+                        <input type="text" class="form-control" placeholder="Ваш логин для входа в систему" aria-describedby="sizing-addon3"></input>
+                    </div>
+                    <br></br>
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-addon" id="sizing-addon3">Пароль</span>
+                        <input type="password" class="form-control" placeholder="Ваш пароль" aria-describedby="sizing-addon3"></input>
+                    </div>
+                    <br></br>
+                    <p><a class="btn btn-danger" href="#" role="button" >Вперёд!</a></p>
+                </div>
+            </div>
+
+            <hr/>
+
+            <footer>
+                <p>Copyright © YourReader 2015  Все права защищены</p>
+            </footer>
+        </div> <!-- /container -->
+
+        <!--        <h:outputScript library="bootstrap/js" name="bootstrap.js"/>
+                <h:outputScript library="bootstrap/js" name="bootstrap.min.js"/>-->
+    </h:body>
+</html>
+

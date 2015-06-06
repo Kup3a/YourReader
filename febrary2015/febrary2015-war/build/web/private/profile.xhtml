@@ -1,0 +1,250 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+    <h:head>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+        <!--    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>-->
+
+        <h:outputStylesheet name="bootstrap/css/bootstrap.min.css" />
+        <h:outputScript name="bootstrap/js/bootstrap.min.js" />
+
+        <!--        <script src="../bootstrap/js/bootstrap.min.js"></script>
+                <link href="../bootstrap/css/bootstrap.min.css" rel="stylesheet"/>-->
+        <script type="text/javascript" src="https://www.dropbox.com/static/api/2/dropins.js" id="dropboxjs" data-app-key="52f6yz7hb7kyspm"></script>
+        <title>OnlineReader</title>
+    </h:head>
+    <h:body>
+        <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="#">OnlineReader</a>
+                </div>
+                <div class="navbar-collapse collapse">
+                    <form class="navbar-form navbar-right" role="form">
+                        <h:outputText style="color: white" value="Привет, #{forPrivateContent.login}!"/>
+                        <button type="submit" class="btn  btn-danger">Sign Out</button>
+                    </form>
+                </div><!--/.navbar-collapse -->
+            </div>
+        </div>
+
+        <div class="jumbotron">
+            <div class="container">
+                <h2><b>ЛИЧНЫЙ КАБИНЕТ</b></h2>
+                <p>Добро пожаловать! Это Ваш личный профиль. Здесь будут храниться все Ваши книги. Здесь же Вы можете добавлять в свою библиотеку новые книги, а также делиться книгами с другими пользователями</p>
+            </div>
+        </div>
+
+        <div class="row">
+            <br></br>
+
+        </div>
+
+
+        <div class="container">
+            <div class="row">
+            </div>
+        </div>
+        <br></br>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-2">
+                    <h:graphicImage value="http://img1.wikia.nocookie.net/__cb20091231054441/splintercell/images/3/39/Unknown_male.jpg" class="img-responsive"/>
+                    <!--<img src="img/unknown.jpg" class="img-responsive" alt="Cinque Terre"></img>-->
+                    <br></br>
+                    <div align="center">
+                        <h:form>
+                            <p><b>
+                                    <h:inputText value="#{forPrivateContent.userName}"/>
+                                </b></p>
+                            <p><b>
+                                    <h:inputText value="#{forPrivateContent.userSirname}"/>
+                                </b></p>
+                            <h:commandButton class="btn btn-success" action="#{forPrivateContent.changeFIO()}" value="Изменить"/>
+                        </h:form>
+                    </div>
+                    <br></br>
+                </div>
+                <div class="col-md-2"></div>
+                <div class="col-md-7">
+                    <!--                    <table class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th>Title</th>
+                                                    <th>Author</th>
+                                                    <th>Link</th>
+                                                    <th>Share</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>Alice's Adventures in Wonderland</td>
+                                                    <td>Lewis Carroll</td>
+                                                    <td><a href="#"><span class="glyphicon glyphicon-book"></span> READ</a></td>
+                                                    <td align="center"><button type="button" class="btn btn-primary btn-xs"><span class="glyphicon glyphicon-plus"></span></button></td>
+                                                </tr>                            
+                                            </tbody>
+                                        </table>-->
+
+                    <h2>#{forPrivateContent.aboutUserBooks}</h2>
+                    <h:dataTable value="#{forPrivateContent.booksByUserLogin}" class="table table-striped" var="s" >                        
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="bookId"/>
+                            </f:facet>
+                            <h:outputText value="#{s.bookId}" />
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="userId"/>
+                            </f:facet>
+                            <h:outputText value="#{s.userId}" />
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="title"/>
+                            </f:facet>
+                            <h:outputText value="#{s.title}" />
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="reference"/>
+                            </f:facet>
+                            <a href="#{s.reference.concat('#page=').concat(s.lastPage)}" onclick="setCookie('',#{s.bookId}, '')"><span class="glyphicon glyphicon-book"></span> Вперёд читать!</a> <!-- forRefOnClick(#{s.bookId}) -->
+                            <!--
+                            не получается сохранить ид книги сначала в js файл, а потом оттуда получать в viewer.js и отправлять в вебсервис
+                            наверное, потому что для каждой страницы js файл как бы обновляется
+                            -->
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">
+                                <h:outputText value="last page"/>
+                            </f:facet>
+                            <h:outputText value="#{s.lastPage}"/>
+                        </h:column>
+                    </h:dataTable>        
+
+                    <div align="right">
+                        <h2>Вытягивайте книги прямо из Вашего Dropbox!</h2>
+                        <h:form id="myForm">
+                            <div>
+                                <div id="div1">
+                                    <h2>Choose the file</h2>
+                                    <p id="container">        
+                                        <!-- тут у нас живет кнопка -->
+                                    </p>                                
+                                </div>
+                            </div>
+                        </h:form>
+
+                    </div>
+
+                    <div align="right">
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bs-example-modal-lg">Full List</button>
+                        <div class="col-lg-6">
+                            <div class="input-group" align="left">
+                                <input type="text" class="form-control" placeholder="Search in the share library"></input>
+                                <span class="input-group-btn">
+                                    <button class="btn btn-default" type="button"><span class="glyphicon glyphicon-search"></span></button>
+                                </span>
+
+                            </div><!-- /input-group -->
+                        </div><!-- /.col-lg-6 -->
+                    </div>
+                </div>
+            </div><!-- /.row -->
+
+
+            <div class="modal bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">times</span></button>
+                            <h4 class="modal-title" id="gridSystemModalLabel">Full List</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="container-fluid">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Title</th>
+                                            <th>Author</th>
+                                            <th>Link</th>
+                                            <th>Share</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Alice's Adventures in Wonderland</td>
+                                            <td>Lewis Carroll</td>
+                                            <td><a href="#"><span class="glyphicon glyphicon-book"></span> READ</a></td>
+                                            <td align="center"><button type="button" class="btn btn-primary btn-xs"><span class="glyphicon glyphicon-plus"></span></button></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Ulysses</td>
+                                            <td>James Joyce</td>
+                                            <td><a href="#"><span class="glyphicon glyphicon-book"></span> READ</a></td>
+                                            <td align="center"><button type="button" class="btn btn-primary btn-xs"><span class="glyphicon glyphicon-plus"></span></button></td>
+                                        </tr>
+                                        <tr>
+                                            <td>The Great Gatsby</td>
+                                            <td>F. Scott Fitzgerald</td>
+                                            <td><a href="#"><span class="glyphicon glyphicon-book"></span> READ</a></td>
+                                            <td align="center"><button type="button" class="btn btn-primary btn-xs"><span class="glyphicon glyphicon-plus"></span></button></td>
+                                        </tr>
+                                        <tr>
+                                            <td>To Kill Mockingbird</td>
+                                            <td>Harper Lee</td>
+                                            <td><a href="#"><span class="glyphicon glyphicon-book"></span> READ</a></td>
+                                            <td align="center"><button type="button" class="btn btn-primary btn-xs"><span class="glyphicon glyphicon-plus"></span></button></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Pride And Prejudice</td>
+                                            <td>Jane Austen</td>
+                                            <td><a href="#"><span class="glyphicon glyphicon-book"></span> READ</a></td>
+                                            <td align="center"><button type="button" class="btn btn-primary btn-xs"><span class="glyphicon glyphicon-plus"></span></button></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary">Add From Dropbox</button>
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </div><!-- /.modal -->
+
+
+        </div>
+
+
+
+
+
+        <div class="container">
+            <footer>
+                <hr></hr>
+                <p>Copyright © YourReader 2015  Все права защищены</p>
+            </footer>
+        </div> <!-- /container -->
+
+        <!--        <h:outputScript library="bootstrap/js" name="bootstrap.js"/>
+                <h:outputScript library="bootstrap/js" name="bootstrap.min.js"/>-->
+
+        <h:outputScript name="privateJS.js" />
+        <!--<script src="../js/privateJS.js"></script>-->
+    </h:body>
+</html>
+
